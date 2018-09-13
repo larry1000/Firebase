@@ -1,0 +1,23 @@
+.jumbotron {
+    background-color: darkblue;
+    text-align: center;
+    color: white;
+}
+.card-header {
+    background-color: darkblue;
+    color: white;
+    font-display: bold;
+}
+
+.btn-primary {
+    margin-top: 5%;
+}
+
+.card {
+    position: relative;
+    padding-bottom: 4%;
+    margin-left: 15%;
+    border-color: darkblue;
+    width: 75%;
+    margin-top: 2%;
+}
