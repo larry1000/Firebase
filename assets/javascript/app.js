@@ -19,15 +19,27 @@ console.log("JS CONNECTED!")
       $('#addTrain').on('click',function(event){
           event.preventDefault();
           console.log("ADD TRAIN CLICKED!!!")
-
-        var newTrain = { 
+        var date = new Date();
+        var day = date.getDay();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+          var brokenOut = $("#formGroupExampleInput3").val().trim().split(":")
+          var safeDate = dateFns.setHours(dateFns.setMinutes(new Date(), brokenOut[1]), brokenOut[0])
+          
+          console.log(safeDate)
+        // var hours = $("#formGroupExampleInput3").val().trim().split(":")[0]
+        // var minutes = $("#formGroupExampleInput3").val().trim().split(":")[1]
+        // var nextTrainTime = dateFns.format(new Date(year, month, day, hours, minutes), "YYYY:MM:DD:hh:mm")
+        var newTrain = {
         name: $("#formGroupExampleInput").val().trim(), 
         destination: $("#formGroupExampleInput2").val().trim(),
-        trainTime: $("#formGroupExampleInput3").val().trim(),
-        frequency: $("#formGroupExampleInput4").val().trim()
+        nextTrainTime: safeDate.toString(),
+        frequency: $("#formGroupExampleInput4").val().trim(),
 
+      
     
     };
+         
 
         console.log("NEW TRAIN: ", newTrain)
 
@@ -35,24 +47,27 @@ console.log("JS CONNECTED!")
 
       })
 
+      
+
+
+
       //Show data from Firebase
       trainData.ref().on("child_added",function(snapshot){
 
-                  var val = snapshot.val();
+                var val = snapshot.val();
+                // var nextTrainTime = dateFns.addMinutes(val.lastTrainTime, val.frequency)
+                var minutesAway = dateFns.differenceInMinutes(new Date(), val.nextTrainTime)
                  $('#table-data').append(
                     '<tr>'+
                    '<td>' + val.name + '</td>' +
                    '<td>' + val.destination + '</td>' +
                    '<td>' + val.frequency + '</td>' +
-                   '<td>' + val.trainTime + '</td>' +
+                   '<td>' + dateFns.format(val.nextTrainTime, "HH:mm") + '</td>' +
+                   '<td>' + minutesAway + '</td>' +
                    '</tr>'
               )      
-              
-      }, function (errorObject) {
-          console.log("Errors handled: " + errorObject.code);
-        console.log("snapshot: ", snapshot.val());
-        // use jquery to append data to table
-
+          console.log("snapshot: ", snapshot.val());
+ 
         
 
       });
